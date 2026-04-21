@@ -1,0 +1,35 @@
+void insertBeforeNode(linkedList_h* DL, listNode* target, char* x) {
+    if (DL == NULL || target == NULL) return; // target이 없으면 삽입 불가 (추가하면 좋은 부분)
+
+    listNode* newNode = (listNode*)malloc(sizeof(listNode));
+    strcpy(newNode->data, x);
+
+    if (target == DL->head) { // (조건 1) 헤드 노드인 경우
+        newNode->llink = NULL;
+        newNode->rlink = target;
+        target->llink = newNode;
+        DL->head = newNode;
+    }
+    else { // (조건 2) 중간 노드인 경우 - 양방향 링크 모두 고려
+        newNode->llink = target->llink;
+        newNode->rlink = target;
+        target->llink->rlink = newNode; // 이전 노드의 오른쪽 링크 갱신
+        target->llink = newNode;         // target의 왼쪽 링크 갱신
+    }
+} 
+void reverseList(linkedList_h* DL) {
+    listNode* p = DL->head; // 현재 탐색 노드
+    listNode* temp = NULL;  // 링크 교체를 위한 임시 변수
+
+    if (p == NULL) return;
+
+    while (p != NULL) {
+        temp = p->llink;    // 현재 노드의 왼쪽 링크 보관
+        p->llink = p->rlink; // 왼쪽 링크에 오른쪽 링크 대입
+        p->rlink = temp;     // 오른쪽 링크에 보관했던 왼쪽 링크 대입
+        p = p->llink;
+    }
+    if (temp != NULL) {
+        DL->head = temp->llink;
+    }
+} 
